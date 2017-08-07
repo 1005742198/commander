@@ -1,0 +1,50 @@
+buildscript {
+	repositories {
+		maven { url "http://nexus.cfaoe.com/nexus/content/groups/public/" }
+	}
+}
+
+group="com.huajin.springcloud"
+
+apply plugin: 'maven'
+
+// 发布到 maven 仓库的文件坐标
+ext{
+	mavenGroup = "com.huajin.springcloud"
+	isUploadRelease = false
+	if (project.hasProperty("uploadRelease")) {
+		isUploadRelease = true
+		mavenURL = "http://nexus.cfaoe.com/nexus/content/repositories/releases"
+		pVersion = '0.0.1-RELEASE'
+	} else {
+		mavenURL = "http://nexus.cfaoe.com/nexus/content/repositories/snapshots"
+		pVersion = '0.0.1-SNAPSHOT'
+	}
+}
+
+sourceCompatibility = 1.8
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+	maven { url "http://nexus.cfaoe.com/nexus/content/groups/public/" }
+}
+
+dependencies {
+	//compile ("commons-lang:commons-lang:2.6")
+}
+
+// 发布到 maven 仓库
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			println("Upload jar to " + mavenURL)
+			repository(url: mavenURL) {
+				authentication(userName: "deploy_gradle", password: "1q2w3e4rnexus")
+			}
+			pom.groupId = mavenGroup
+			pom.artifactId = project.name
+			pom.version = pVersion
+		}
+	}
+}

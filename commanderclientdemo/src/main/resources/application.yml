@@ -1,0 +1,74 @@
+---
+spring.profiles: demo1
+server:
+  port: 8050
+    
+---
+spring.profiles: demo2
+server:
+  port: 8051
+
+---
+spring:
+  application:
+    name: commander-client-demo
+    
+  jpa:
+    generate-ddl: false    # 让jpa不要在启动时自动根据entity创建表
+    show-sql: false
+    hibernate:
+      ddl-auto: none       # 让 hibernate 不要在启动时删除、创建表
+
+#  datasource:
+#    platform: mysql
+#    schema:
+#    - classpath:schema.mysql.sql
+  datasource:
+    platform: mysql
+    driverClassName: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    initialSize: 10
+    minIdle: 10
+    maxActive: 50
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 5000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    validationQueryTimeout: 60
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: false
+    
+  rabbitmq:
+#    addresses: "172.16.18.5:5672,172.16.18.6:5672,172.16.18.7:5672"
+    addresses: "172.16.21.10:5672"
+    username: "admin"
+    password: "rabbitmq"
+    virtual-host: "/"
+    listener:
+      retry:
+        enabled: true # 避免抛异常时死循环
+        multiplier: 2 # 每次间隔时间增大2倍
+        
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:9101/eureka
+      healthcheck:
+        enable: true
+    enabled: true
+    
+logging:
+  level:
+    root: info
+    org.hibernate: info
+    # 显示 sql 语句的参数
+    org.hibernate.type.descriptor.sql.BasicBinder: info
+    org.hibernate.type.descriptor.sql.BasicExtractor: info
+    # 应用日志级别
+    com.huajin.commander: debug
+    
+
+    

@@ -1,0 +1,54 @@
+server:
+  port: 8106
+  
+spring:
+  application:
+    name: commander-server
+#  jpa:
+#    generate-ddl: false    # 让jpa不要在启动时自动根据entity创建表
+#    show-sql: false        # 会将SQL打印到标准输出
+#    hibernate:
+#      ddl-auto: none       # 让 hibernate 不要在启动时删除、创建表
+
+  rabbitmq:
+    listener:
+      retry:
+        enabled: true # 避免抛异常时死循环
+        multiplier: 2 # 每次间隔时间增大2倍
+        
+  datasource:
+    platform: mysql
+    driverClassName: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    filters: stat
+    initialSize: 10
+    minIdle: 10
+    maxActive: 50
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 5000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT 'x'
+    validationQueryTimeout: 60
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    poolPreparedStatements: false
+    
+eureka:
+  client:
+    service-url:
+      healthcheck:
+        enable: true
+
+logging:
+  level:
+    root: info
+    org.hibernate: error
+    # 显示 sql 语句的参数
+    org.hibernate.type.descriptor.sql.BasicBinder: info     # SQL参数
+    org.hibernate.type.descriptor.sql.BasicExtractor: info  # SQL返回值
+    # 应用日志级别
+    com.huajin.commander: debug
+    com.huajin.commander.manager.schedule.EventRecoveryTask: info
+  file: /data/Logs/commanderserver.cfaoe.local/springboot.log
+  

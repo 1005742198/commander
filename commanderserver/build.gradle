@@ -1,0 +1,62 @@
+
+version = '0.0.1-RELEASE'
+
+apply from:   "deploy.gradle"
+
+// 构建的目标环境定义
+final PROFILE_DEV  = 'dev'
+final PROFILE_TEST = 'test'
+final PROFILE_QA   = 'qa'
+final PROFILE_GRAY = 'gray'
+final PROFILE_PROD = 'pro'
+final PROFILE_PROPERTY = "deploy.profile"
+
+ext {
+	// 构建的目标环境，默认是本机开发环境
+	profile = PROFILE_DEV
+	if (project.hasProperty(PROFILE_PROPERTY)) {
+		profile = project[PROFILE_PROPERTY]
+	}
+	println "target profile: $profile"
+}
+
+// 实现分 profile 拷贝配置文件
+processResources {
+	println "processResources using: $profile"
+	if (profile != PROFILE_DEV) {
+		from "sc/$profile"
+	}
+}
+
+prepareDeploy {
+	deployType = "jar"
+}
+
+dependencies {
+
+	compile project(':commandercommon')
+
+	compile ('org.springframework.cloud:spring-cloud-starter-feign')
+	compile ('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile ('org.springframework.boot:spring-boot-starter-web')
+	compile ('org.springframework.boot:spring-boot-starter-amqp')
+	compile ('org.springframework.cloud:spring-cloud-starter-eureka')
+
+	compile ('com.alibaba:fastjson:1.1.26')
+	
+	// 支持 rcc 目录
+	compile ('com.huajin.springcloud:huajin-springcloud-config')
+	
+	//mysql
+	compile ('mysql:mysql-connector-java:5.1.38')
+	compile ('com.alibaba:druid:1.0.29')
+	// 加密
+	compile ('com.google.code.spring-crypto-utils:spring-crypto-utils:1.4.0')
+	
+	testCompile ('org.springframework.boot:spring-boot-starter-test')
+	
+	runtime ('com.h2database:h2')
+}
+
+// 只有定义了 -D do.tests=true 才会执行测试步骤
+test.onlyIf { Boolean.getBoolean('do.tests') }

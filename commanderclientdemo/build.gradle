@@ -1,0 +1,21 @@
+
+version = '0.0.1-SNAPSHOT'
+
+dependencies {
+	compile project(":commanderclient")
+	
+	compile('org.springframework.boot:spring-boot-starter-data-jpa')
+	compile('org.springframework.boot:spring-boot-starter-aop')
+	compile('org.springframework.boot:spring-boot-starter-web')
+	compile ('com.alibaba:fastjson:1.1.26')
+	
+	// 支持 rcc 目录
+	compile ('com.huajin.springcloud:huajin-springcloud-config:0.0.1-RELEASE')
+	
+	//mysql
+	compile ('mysql:mysql-connector-java:5.1.38')
+	compile ('com.alibaba:druid:1.0.29')
+	runtime('com.h2database:h2')
+	
+	testCompile 'org.springframework.boot:spring-boot-starter-test'
+}

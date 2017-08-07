@@ -1,0 +1,66 @@
+buildscript {
+	repositories {
+		maven { url "http://nexus.cfaoe.com/nexus/content/groups/public/" }
+	}
+}
+
+apply plugin: 'maven'
+
+// 发布到 maven 仓库的文件坐标
+ext{
+	mavenGroup = "com.huajin.springcloud"
+	isUploadRelease = false
+	if (project.hasProperty("uploadRelease")) {
+		isUploadRelease = true
+		mavenURL = "http://nexus.cfaoe.com/nexus/content/repositories/releases"
+		pVersion = '0.0.1-RELEASE'
+	} else {
+		mavenURL = "http://nexus.cfaoe.com/nexus/content/repositories/snapshots"
+		pVersion = '0.0.1-SNAPSHOT'
+	}
+}
+
+sourceCompatibility = 1.8
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+	maven { url "http://nexus.cfaoe.com/nexus/content/groups/public/" }
+}
+
+dependencies {
+	compile project(':commandercommon')
+	
+	compile ('org.springframework.boot:spring-boot-starter-aop')
+	compile ('org.springframework.boot:spring-boot-starter-web')
+	compile ('org.springframework.boot:spring-boot-starter-amqp')
+	compile ('org.springframework.cloud:spring-cloud-starter-feign')
+	
+	//compile ('org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0')
+	
+	compile ('org.mybatis:mybatis:3.4.4')
+	compile ('org.mybatis:mybatis-spring:1.3.1')
+
+	compile ('com.alibaba:fastjson:1.1.26')
+	compile ('com.alibaba:druid:1.0.29')
+	compile ('mysql:mysql-connector-java:5.1.38')
+	
+	compile ('org.springframework.cloud:spring-cloud-starter-eureka')
+	
+	testCompile ('org.springframework.boot:spring-boot-starter-test')
+}
+
+// 发布到 maven 仓库
+uploadArchives {
+	repositories {
+		mavenDeployer {
+			println("Upload jar to " + mavenURL)
+			repository(url: mavenURL) {
+				authentication(userName: "deploy_gradle", password: "1q2w3e4rnexus")
+			}
+			pom.groupId = mavenGroup
+			pom.artifactId = project.name
+			pom.version = pVersion
+		}
+	}
+}

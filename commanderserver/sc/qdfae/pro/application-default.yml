@@ -1,0 +1,14 @@
+eureka:
+  service:
+    url: http://eureka.qdfae.local:9101/eureka/
+  client:
+    service-url:
+      defaultZone: http://eureka.qdfae.local:9101/eureka/
+
+encryptkey: 'g0/yLPH3kYMW/rCtLKvcMrnODdNuV/jE'
+
+spring.rabbitmq.virtual-host: /
+
+spring:
+  rabbitmq:
+    requested-heartbeat: 10

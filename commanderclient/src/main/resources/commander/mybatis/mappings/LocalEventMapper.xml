@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.huajin.commander.client.repository.LocalEventDao">
+
+	<select id="findByEventId" parameterType="long" 
+			resultType="com.huajin.commander.client.domain.LocalEventEntity">
+		SELECT *
+		  FROM event_local
+		 WHERE EventId = #{eventId}
+	</select>
+	
+	<insert id="insert" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO event_local (
+			Id,
+			EventId,
+			EventType,
+			Name,
+			Status,
+			MsgBody,
+			Source,
+			CreateTime
+		) VALUES (
+			#{id} ,
+			#{eventId} ,
+			#{eventType} ,
+			#{name} ,
+			#{status} ,
+			#{msgBody} ,
+			#{source} ,
+			now()
+		)
+		<selectKey resultType="java.lang.Long" keyProperty="id">
+			select LAST_INSERT_ID() as id
+		</selectKey>
+	</insert>
+	
+	<update id="update">
+		UPDATE event_local SET
+			EventId=#{eventId},
+			EventType=#{eventType},
+			Name=#{name},
+			Status=#{status},
+			MsgBody=#{msgBody},
+			Source=#{source}
+		WHERE
+			Id = #{id}
+	</update>
+</mapper>
+

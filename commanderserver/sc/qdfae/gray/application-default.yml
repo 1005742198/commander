@@ -1,0 +1,10 @@
+eureka:
+  service:
+    url: http://gray.eureka.qdfae.local:9101/eureka/
+  client:
+    service-url:
+      defaultZone: http://gray.eureka.qdfae.local:9101/eureka/
+
+encryptkey: 'g0/yLPH3kYMW/rCtLKvcMrnODdNuV/jE'
+
+spring.rabbitmq.virtual-host: /

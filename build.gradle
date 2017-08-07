@@ -1,0 +1,48 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.2.RELEASE'
+	}
+	repositories {
+		maven { url "http://nexus.cfaoe.com/nexus/content/groups/public/" }
+		maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}") 
+	}
+}
+
+subprojects {
+	
+	apply plugin: 'java'
+	apply plugin: 'eclipse'
+	apply plugin: 'org.springframework.boot'
+	
+	sourceCompatibility = 1.8
+	
+	repositories {
+		maven { url "http://nexus.cfaoe.com/nexus/content/groups/public/" }
+		maven { url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+		mavenCentral()
+	}
+	
+	dependencyManagement {
+	  imports {
+	    mavenBom 'org.springframework.cloud:spring-cloud-dependencies:Dalston.RELEASE'
+	    mavenBom 'com.huajin.springcloud:huajin-dependencies:0.0.1-RELEASE'
+	  }
+	   resolutionStrategy {
+	  	cacheChangingModulesFor 0, 'seconds'
+	  }
+	}
+/*
+	dependencies {
+	    compile 'org.springframework.cloud:spring-cloud-starter-eureka'
+	    
+		runtime 'org.springframework.boot:spring-boot-actuator'
+		runtime 'org.springframework.boot:spring-boot-devtools'
+		
+		testCompile 'org.springframework.boot:spring-boot-starter-test'
+	}
+*/
+}
